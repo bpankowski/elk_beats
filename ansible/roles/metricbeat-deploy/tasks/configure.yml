@@ -1,0 +1,9 @@
+---
+- name: Create the main config file
+  template:
+    src: metricbeat.yml.j2
+    dest: "{{ metricbeat_config_dir }}/metricbeat.yml"
+    owner: root
+    group: root
+    mode: "0644"
+  become: yes

@@ -1,0 +1,6 @@
+---
+- name: Deploy Metricbeat on nodes
+  hosts: metricbeats
+  become: true
+  roles:
+    - role: metricbeat-deploy

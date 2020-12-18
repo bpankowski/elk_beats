@@ -1,0 +1,66 @@
+---
+server_name: "{{ ansible_hostname }}"
+# Elastic client http port
+es_http_port: 9200
+# Elastic transport port (master election, data exchange)
+es_transport_port: 9300
+# Kibana client http port
+k_http_port: 5601
+
+es_cluster_ip: 10.15.88.41
+
+metricbeat_config_dir: /etc/metricbeat/metricbeat.yml
+
+docker_compose_release:
+
+metricbeat_modules_dir: /etc/metricbeat/modules.d/system.yml
+
+metricbeat.config.modules:
+  path: /etc/metricbeat/modules.d/*.yml
+  reload.enabled: true
+  reload.period: 30s
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+name: "{{ server_name }}"
+tags: "[{{ server_name }}]"
+output.elasticsearch:
+  hosts: "[{{ es_cluster_ip }}:{{ es_http_port }}]"
+  username: "elastic"
+  password: "changeme"
+processors:
+  - add_host_metadata: ~
+  - add_docker_metadata: ~
+monitoring.enabled: true
+setup.kibana:
+  host: "{{ es_cluster_ip }}:{{ k_http_port }}"
+
+metricbeat_modules_config:
+  - module: system
+    period: 30s
+    metricsets:
+      - cpu
+      - load
+      - memory
+      - network
+      - process
+      - process_summary
+      - diskio
+      - socket
+      - service
+      - users
+    process.include_top_n:
+      by_cpu: 5 # include top 5 processes by CPU
+      by_memory: 5 # include top 5 processes by memory
+  - module: system
+    period: 1m
+    metricsets:
+      - filesystem
+      - fsstat
+    processors:
+      - drop_event.when.regexp:
+          system.filesystem.mount_point: "^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)"
+  - module: system
+    period: 15m
+    metricsets:
+      - uptime

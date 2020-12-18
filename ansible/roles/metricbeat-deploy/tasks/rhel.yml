@@ -1,0 +1,60 @@
+---
+- name: Install yum utils
+  yum:
+    name: yum-utils
+    state: latest
+
+- name: purge docker-compose package
+  yum:
+    name: docker-compose
+    state: removed
+
+- name: install python
+  yum:
+    name: python
+    state: present
+
+- name: install pip
+  yum:
+    name: python-pip
+    state: present
+
+- name: Install device-mapper-persistent-data
+  yum:
+    name: device-mapper-persistent-data
+    state: latest
+
+- name: Install lvm2
+  yum:
+    name: lvm2
+    state: latest
+
+- name: Add Docker repo
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+
+- name: Install Docker
+  package:
+    name: docker-ce
+    state: latest
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: "u+x,g+x"
+
+- name: install docker-compose stuff with pip
+  pip:
+    name: " {{ item }}"
+  with_items:
+    - pyyaml
+    - docker-py
+    - docker-compose

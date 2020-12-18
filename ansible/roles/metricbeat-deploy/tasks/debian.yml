@@ -1,0 +1,40 @@
+---
+- name: purge docker-compose and pip package
+  apt:
+    name: "{{ item }}"
+    state: present
+    purge: yes
+  with_items:
+    - docker-compose
+    - python-pip
+
+- name: install packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: install python-setuptools
+  apt:
+    name: python-setuptools
+
+- name: install pip
+  easy_install:
+    name: pip
+
+- name: Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{ docker_compose_release }}/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: "u+x,g+x"
+
+- name: install docker-compose stuff with pip
+  pip:
+    name: " {{ item }}"
+  with_items:
+    - pyyaml
+    - docker-py
+    - docker-compose

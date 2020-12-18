@@ -1,0 +1,11 @@
+---
+- name: Check for ELK containers port
+  wait_for:
+    delay: 5
+    connect_timeout: 5
+    port: "{{ item }}"
+    timeout: 60
+  with_items:
+    - "{{ es_http_port }}"
+    - "{{ es_transport_port }}"
+    - "{{ k_http_port }}"
