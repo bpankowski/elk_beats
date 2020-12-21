@@ -1,0 +1,15 @@
+---
+- name: copy Docker Compose files
+  copy:
+    src: files/{{ item }}
+    dest: /tmp/
+  loop:
+    - docker-compose.yml
+    - elasticsearch
+    - kibana
+
+- name: deploy Docker Compose stack
+  docker_compose:
+    project_src: /tmp/
+    files:
+      - docker-compose.yml

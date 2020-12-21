@@ -5,10 +5,10 @@ services:
     build:
       context: elasticsearch/
       args:
-        ELK_VERSION: $ELK_VERSION
+        ELK_VERSION: 7.10.1
     volumes:
       - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
+        source: ./elasticsearch.yml
         target: /usr/share/elasticsearch/config/elasticsearch.yml
         read_only: true
       - type: volume
@@ -28,10 +28,10 @@ services:
     build:
       context: kibana/
       args:
-        ELK_VERSION: $ELK_VERSION
+        ELK_VERSION: 7.10.1
     volumes:
       - type: bind
-        source: ./kibana/config/kibana.yml
+        source: ./kibana.yml
         target: /usr/share/kibana/config/kibana.yml
         read_only: true
     ports:
