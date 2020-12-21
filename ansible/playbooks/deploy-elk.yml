@@ -1,22 +1,4 @@
-# ---
-# - name: Deploy Elasticsearch master on nodes
-#   hosts: elastic-masters
-#   become: true
-#   roles:
-#     - role: elastic-deploy
-
-# - name: Deploy Elasticsearch data on nodes
-#   hosts: elastic-data
-#   become: true
-#   roles:
-#     - role: elastic-deploy
-
-# - name: Deploy Kibana on nodes
-#   hosts: kibana
-#   become: true
-#   roles:
-#     - role: kibana-deploy
-
+--- # ---
 - name: Deploy elk on nodes
   hosts: elk
   become: true
