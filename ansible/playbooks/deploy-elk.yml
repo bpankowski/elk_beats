@@ -1,4 +1,4 @@
---- # ---
+---
 - name: Deploy elk on nodes
   hosts: elk
   become: true
